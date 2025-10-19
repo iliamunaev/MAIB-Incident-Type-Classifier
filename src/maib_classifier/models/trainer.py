@@ -74,11 +74,24 @@ class ModelTrainer:
     """Setup evaluation metrics."""
     logger.info("Setting up evaluation metrics...")
 
-    self.metrics = {
-      "accuracy": evaluate.load("accuracy"),
-      "macro_f1": evaluate.load("f1"),
-      "weighted_f1": evaluate.load("f1")
-    }
+    # Load metrics using the correct method for evaluate library
+    try:
+      # Try the newer evaluate library API
+      self.metrics = {
+        "accuracy": evaluate.load("accuracy"),
+        "macro_f1": evaluate.load("f1"),
+        "weighted_f1": evaluate.load("f1")
+      }
+    except (AttributeError, Exception) as e:
+      # Fallback: use sklearn metrics directly
+      logger.warning(f"Failed to load evaluate metrics: {e}. Using sklearn fallback.")
+      from sklearn.metrics import accuracy_score, f1_score
+
+      self.metrics = {
+        "accuracy": None,  # Will use sklearn accuracy_score
+        "macro_f1": None,  # Will use sklearn f1_score with average='macro'
+        "weighted_f1": None  # Will use sklearn f1_score with average='weighted'
+      }
 
     logger.info(f"Metrics loaded: {list(self.metrics.keys())}")
 
@@ -97,25 +110,32 @@ class ModelTrainer:
 
     results = {}
 
-    # Accuracy
-    results["accuracy"] = self.metrics["accuracy"].compute(
-      predictions=predictions,
-      references=labels
-    )["accuracy"]
+    # Check if we have evaluate metrics or need to use sklearn fallback
+    if self.metrics["accuracy"] is not None:
+      # Use evaluate library metrics
+      results["accuracy"] = self.metrics["accuracy"].compute(
+        predictions=predictions,
+        references=labels
+      )["accuracy"]
 
-    # Macro F1
-    results["macro_f1"] = self.metrics["macro_f1"].compute(
-      predictions=predictions,
-      references=labels,
-      average="macro"
-    )["f1"]
+      results["macro_f1"] = self.metrics["macro_f1"].compute(
+        predictions=predictions,
+        references=labels,
+        average="macro"
+      )["f1"]
 
-    # Weighted F1
-    results["weighted_f1"] = self.metrics["weighted_f1"].compute(
-      predictions=predictions,
-      references=labels,
-      average="weighted"
-    )["f1"]
+      results["weighted_f1"] = self.metrics["weighted_f1"].compute(
+        predictions=predictions,
+        references=labels,
+        average="weighted"
+      )["f1"]
+    else:
+      # Use sklearn metrics directly
+      from sklearn.metrics import accuracy_score, f1_score
+
+      results["accuracy"] = accuracy_score(labels, predictions)
+      results["macro_f1"] = f1_score(labels, predictions, average="macro")
+      results["weighted_f1"] = f1_score(labels, predictions, average="weighted")
 
     return results
 
