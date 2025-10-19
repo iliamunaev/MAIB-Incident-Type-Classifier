@@ -53,6 +53,24 @@ This system uses state-of-the-art transformer models (DeBERTa-v3) to automatical
    - The system automatically downloads data from Hugging Face
    - No local data preparation required
 
+### Google Colab Usage
+
+```python
+# In Google Colab
+!git clone https://github.com/iliamunaev/MAIB-Incident-Type-Classifier.git
+!cd MAIB-Incident-Type-Classifier && pip install -e .
+
+# Train with free GPU (data automatically downloaded from Hugging Face)
+!python scripts/train.py --epochs 3 --batch_size 32
+
+# Run inference
+!python scripts/inference.py --model_path outputs/best_model --interactive
+
+# Download trained model
+from google.colab import files
+files.download('outputs/best_model')
+```
+
 ## Usage
 
 ### Training

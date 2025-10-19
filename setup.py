@@ -24,7 +24,7 @@ setup(
   description="Marine Accident Investigation Branch Incident Type Classification System",
   long_description=long_description,
   long_description_content_type="text/markdown",
-  url="https://github.com/maib-team/incident-classifier",
+  url="https://github.com/iliamunaev/MAIB-Incident-Type-Classifier",
   packages=find_packages(where="src"),
   package_dir={"": "src"},
   classifiers=[
