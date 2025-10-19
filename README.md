@@ -21,7 +21,7 @@ This system uses state-of-the-art transformer models (DeBERTa-v3) to automatical
 ## Features
 
 - **Professional Architecture**: Modular, well-structured codebase following software engineering best practices
-- **High Performance**: Achieves 88.7% accuracy and 87.3% weighted F1-score
+- **High Performance**: Achieves 89% accuracy and 89% weighted F1-score
 - **Comprehensive Evaluation**: Includes confusion matrix, per-class metrics, and detailed reporting
 - **Easy to Use**: Simple command-line interfaces for training, inference, and evaluation
 - **Configurable**: YAML-based configuration system for easy customization
@@ -38,6 +38,7 @@ This system uses state-of-the-art transformer models (DeBERTa-v3) to automatical
 ### Quick Start
 
 1. **Clone and setup**:
+
    ```bash
    git clone <repository-url>
    cd MAIB-Incident-Type-Classifier/new
@@ -45,6 +46,7 @@ This system uses state-of-the-art transformer models (DeBERTa-v3) to automatical
    ```
 
 2. **Install development dependencies** (optional):
+
    ```bash
    pip install -e ".[dev,jupyter]"
    ```
@@ -126,6 +128,51 @@ python scripts/evaluate.py \
   --output_dir evaluation_results
 ```
 
+## Evaluation Results
+
+The model evaluation generates comprehensive visualizations and metrics:
+
+### Visualizations
+
+- **Confusion Matrix**: `evaluation_results/confusion_matrix.png` - Shows classification accuracy across all incident types
+- **Per-Class F1 Scores**: `evaluation_results/per_class_f1.png` - Displays F1 performance for each incident category
+
+![Confusion Matrix](evaluation_results/confusion_matrix.png)
+
+![Per-Class F1 Scores](evaluation_results/per_class_f1.png)
+
+### Detailed Metrics
+
+The evaluation produces a detailed classification report (`evaluation_results/classification_report.txt`) with precision, recall, and F1-score for each incident type:
+
+| Incident Type | Precision | Recall | F1-Score | Support |
+|---------------|-----------|--------|----------|---------|
+| Accident to person(s) | 0.97 | 0.96 | 0.96 | 67 |
+| Capsizing / Listing | 0.75 | 0.86 | 0.80 | 7 |
+| Collision | 0.76 | 0.87 | 0.81 | 15 |
+| Contact | 0.62 | 0.57 | 0.59 | 23 |
+| Damage / Loss Of Equipment | 0.94 | 0.92 | 0.93 | 72 |
+| Fire / Explosion | 0.95 | 0.95 | 0.95 | 20 |
+| Flooding / Foundering | 1.00 | 0.83 | 0.91 | 12 |
+| Grounding / Stranding | 0.90 | 0.90 | 0.90 | 31 |
+| Hull Failure | 0.00 | 0.00 | 0.00 | 0 |
+| Loss Of Control | 0.83 | 0.90 | 0.86 | 42 |
+| Non-accidental Event | 0.00 | 0.00 | 0.00 | 0 |
+
+**Overall Performance:**
+
+- **Accuracy**: 89.0%
+- **Macro F1**: 70.2%
+- **Weighted F1**: 89.0%
+
+### Dataset Information
+
+The evaluation uses the MAIB incident reports dataset with the following split:
+
+- **Training**: 5,191 samples
+- **Validation**: 288 samples
+- **Test**: 289 samples
+
 ## Configuration
 
 The system uses YAML configuration files. See `configs/config.yaml` for all available options:
@@ -147,7 +194,7 @@ training:
 
 ## Project Structure
 
-```
+```text
 new/
 ├── src/maib_classifier/          # Main package
 │   ├── data/                     # Data processing
@@ -240,9 +287,9 @@ make lint
 
 The system achieves the following performance metrics on the MAIB dataset:
 
-- **Accuracy**: 88.7%
-- **Macro F1**: 69.1%
-- **Weighted F1**: 87.3%
+- **Accuracy**: 89.0%
+- **Macro F1**: 70.2%
+- **Weighted F1**: 89.0%
 
 ### Training Time
 
