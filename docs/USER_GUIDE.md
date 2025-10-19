@@ -45,7 +45,7 @@ python scripts/inference.py --model_path outputs/best_model --interactive
 
 ```bash
 git clone <repository-url>
-cd MAIB-Incident-Type-Classifier/new
+cd MAIB-Incident-Type-Classifier
 pip install -e .
 ```
 
@@ -53,7 +53,7 @@ pip install -e .
 
 ```bash
 git clone <repository-url>
-cd MAIB-Incident-Type-Classifier/new
+cd MAIB-Incident-Type-Classifier
 pip install -e ".[dev,jupyter]"
 ```
 
@@ -61,7 +61,7 @@ pip install -e ".[dev,jupyter]"
 
 ```bash
 git clone <repository-url>
-cd MAIB-Incident-Type-Classifier/new
+cd MAIB-Incident-Type-Classifier
 docker build -t maib-classifier .
 ```
 

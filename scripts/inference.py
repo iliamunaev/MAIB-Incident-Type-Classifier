@@ -176,7 +176,7 @@ def main():
 
     # Run inference based on mode
     if args.interactive:
-      pipeline.predictor.interactive_predict()
+      pipeline.interactive_predict()
 
     elif args.text:
       predict_single_text(pipeline, args.text, args.top_k)
