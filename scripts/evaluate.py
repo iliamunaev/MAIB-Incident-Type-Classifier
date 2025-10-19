@@ -116,7 +116,9 @@ def evaluate_model(config: Config, model_path: str, output_dir: str):
 
   # Get predictions
   predictions = predictor.predict_batch(texts)
-  predicted_labels = [int(pred[0][0]) for pred in predictions]  # Get top prediction
+  # Convert label names to indices using label mappings
+  label2id = metadata["label_mappings"]["label2id"]
+  predicted_labels = [label2id[pred[0][0]] for pred in predictions]  # Get top prediction
 
   # Initialize evaluator
   evaluator = ModelEvaluator(metadata["label_mappings"]["id2label"])

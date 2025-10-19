@@ -211,3 +211,4 @@ data/raw_data/occurrences.csv
 data/maib-incident-reports-dataset.jsonl
 data/maib-incident-reports-5K-processed
 old/
+outputs/
