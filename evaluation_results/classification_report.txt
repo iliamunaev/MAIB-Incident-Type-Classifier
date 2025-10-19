@@ -1,0 +1,17 @@
+                            precision    recall  f1-score   support
+
+     Accident to person(s)       0.97      0.96      0.96        67
+       Capsizing / Listing       0.75      0.86      0.80         7
+                 Collision       0.76      0.87      0.81        15
+                   Contact       0.62      0.57      0.59        23
+Damage / Loss Of Equipment       0.94      0.92      0.93        72
+          Fire / Explosion       0.95      0.95      0.95        20
+     Flooding / Foundering       1.00      0.83      0.91        12
+     Grounding / Stranding       0.90      0.90      0.90        31
+              Hull Failure       0.00      0.00      0.00         0
+           Loss Of Control       0.83      0.90      0.86        42
+      Non-accidental Event       0.00      0.00      0.00         0
+
+                  accuracy                           0.89       289
+                 macro avg       0.70      0.70      0.70       289
+              weighted avg       0.89      0.89      0.89       289
