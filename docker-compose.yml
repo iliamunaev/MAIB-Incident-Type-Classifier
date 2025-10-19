@@ -1,0 +1,53 @@
+# MAIB Incident Type Classifier - Docker Compose
+
+version: '3.8'
+
+services:
+  maib-classifier:
+    build: .
+    container_name: maib-classifier
+    volumes:
+      - ./data:/app/data
+      - ./outputs:/app/outputs
+      - ./logs:/app/logs
+      - ./configs:/app/configs
+    environment:
+      - MAIB_OUTPUT_DIR=/app/outputs
+      - MAIB_LOG_FILE=/app/logs/training.log
+      - MAIB_DEVICE=cpu  # Use CPU for Docker
+    command: ["python", "scripts/train.py", "--help"]
+
+  # Optional: Jupyter notebook for development
+  jupyter:
+    build: .
+    container_name: maib-jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./data:/app/data
+      - ./outputs:/app/outputs
+      - ./logs:/app/logs
+      - ./configs:/app/configs
+      - ./notebooks:/app/notebooks
+    environment:
+      - MAIB_OUTPUT_DIR=/app/outputs
+      - MAIB_LOG_FILE=/app/logs/training.log
+      - MAIB_DEVICE=cpu
+    command: ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+
+  # Optional: Development with GPU support
+  maib-classifier-gpu:
+    build: .
+    container_name: maib-classifier-gpu
+    runtime: nvidia  # Requires nvidia-docker
+    volumes:
+      - ./data:/app/data
+      - ./outputs:/app/outputs
+      - ./logs:/app/logs
+      - ./configs:/app/configs
+    environment:
+      - MAIB_OUTPUT_DIR=/app/outputs
+      - MAIB_LOG_FILE=/app/logs/training.log
+      - MAIB_DEVICE=cuda
+      - CUDA_VISIBLE_DEVICES=0
+    command: ["python", "scripts/train.py", "--help"]
