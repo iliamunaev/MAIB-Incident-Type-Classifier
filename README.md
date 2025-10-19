@@ -49,9 +49,9 @@ This system uses state-of-the-art transformer models (DeBERTa-v3) to automatical
    pip install -e ".[dev,jupyter]"
    ```
 
-3. **Prepare your data**:
-   - Place your JSONL data file in the `data/` directory
-   - Ensure the file has `text` and `label` columns
+3. **Ready to use**:
+   - The system automatically downloads data from Hugging Face
+   - No local data preparation required
 
 ## Usage
 
@@ -60,14 +60,13 @@ This system uses state-of-the-art transformer models (DeBERTa-v3) to automatical
 Train a new model:
 
 ```bash
-python scripts/train.py --data_path data/maib-incident-reports-dataset.jsonl
+python scripts/train.py
 ```
 
 With custom parameters:
 
 ```bash
 python scripts/train.py \
-  --data_path data/maib-incident-reports-dataset.jsonl \
   --output_dir my_outputs \
   --epochs 5 \
   --batch_size 16 \
@@ -106,7 +105,6 @@ Comprehensive model evaluation:
 ```bash
 python scripts/evaluate.py \
   --model_path outputs/best_model \
-  --data_path data/test_data.jsonl \
   --output_dir evaluation_results
 ```
 
@@ -143,7 +141,7 @@ new/
 ├── tests/                        # Unit tests
 ├── outputs/                      # Training outputs
 ├── logs/                         # Log files
-└── data/                         # Data directory
+└── data/                         # Data directory (optional for local data)
 ```
 
 ## API Usage
@@ -161,7 +159,7 @@ config = Config.from_yaml("configs/config.yaml")
 
 # Process data
 processor = DataProcessor(config)
-dataset, metadata = processor.process_data("data/maib-data.jsonl")
+dataset, metadata = processor.process_data()
 
 # Train model
 trainer = ModelTrainer(config)
@@ -182,8 +180,8 @@ Build and run with Docker:
 docker build -t maib-classifier .
 
 # Run training
-docker run -v $(pwd)/data:/app/data -v $(pwd)/outputs:/app/outputs \
-  maib-classifier python scripts/train.py --data_path data/maib-data.jsonl
+docker run -v $(pwd)/outputs:/app/outputs \
+  maib-classifier python scripts/train.py
 
 # Run with Docker Compose
 docker-compose up maib-classifier
@@ -274,3 +272,4 @@ For questions, issues, or contributions, please:
 - Microsoft for the DeBERTa-v3 model
 - Hugging Face for the transformers library
 - The open-source community for various tools and libraries
+- Baker Street for providing the MAIB incident reports dataset on Hugging Face

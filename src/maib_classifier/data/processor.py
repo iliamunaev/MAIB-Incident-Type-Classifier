@@ -27,20 +27,17 @@ class DataProcessor:
     self.class_names = None
     self.label_mappings = None
 
-  def load_dataset(self, data_path: str) -> DatasetDict:
+  def load_dataset(self) -> DatasetDict:
     """
-    Load dataset from JSONL file.
-
-    Args:
-      data_path: Path to JSONL data file
+    Load dataset from Hugging Face.
 
     Returns:
       DatasetDict with train/validation/test splits
     """
-    logger.info(f"Loading dataset from {data_path}")
+    logger.info("Loading dataset from Hugging Face: baker-street/maib-incident-reports-5K")
 
-    # Load the dataset
-    ds = load_dataset("json", data_files=data_path)["train"]
+    # Load the dataset from Hugging Face
+    ds = load_dataset("baker-street/maib-incident-reports-5K", split="train")
 
     # Split into train/test (80/20)
     ds = ds.train_test_split(
@@ -177,12 +174,9 @@ class DataProcessor:
     logger.info(f"Dataset prepared with columns: {torch_cols}")
     return dataset
 
-  def process_data(self, data_path: str) -> Tuple[DatasetDict, Dict[str, any]]:
+  def process_data(self) -> Tuple[DatasetDict, Dict[str, any]]:
     """
     Complete data processing pipeline.
-
-    Args:
-      data_path: Path to JSONL data file
 
     Returns:
       Tuple of (processed_dataset, metadata)
@@ -190,7 +184,7 @@ class DataProcessor:
     logger.info("Starting data processing pipeline...")
 
     # Load dataset
-    dataset = self.load_dataset(data_path)
+    dataset = self.load_dataset()
 
     # Prepare labels
     dataset = self.prepare_labels(dataset)

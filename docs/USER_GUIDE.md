@@ -20,11 +20,11 @@ Get up and running in 5 minutes:
 # 1. Install the package
 pip install -e .
 
-# 2. Prepare your data (JSONL format)
-# Place your data file in data/maib-incident-reports-dataset.jsonl
+# 2. Ready to use - data automatically downloaded from Hugging Face
+# No data preparation required
 
 # 3. Train the model
-python scripts/train.py --data_path data/maib-incident-reports-dataset.jsonl
+python scripts/train.py
 
 # 4. Run inference
 python scripts/inference.py --model_path outputs/best_model --interactive
@@ -71,11 +71,11 @@ docker build -t maib-classifier .
 python -c "import maib_classifier; print('Installation successful!')"
 ```
 
-## Data Preparation
+## Data Source
 
-### Data Format
+### Hugging Face Dataset
 
-The system expects JSONL (JSON Lines) format with the following structure:
+The system automatically loads data from the `baker-street/maib-incident-reports-5K` dataset on Hugging Face. This dataset contains MAIB incident reports in the following format:
 
 ```json
 {"text": "Incident description text", "label": "Accident to person(s)"}
@@ -83,10 +83,10 @@ The system expects JSONL (JSON Lines) format with the following structure:
 {"text": "Third incident description", "label": "Fire / Explosion"}
 ```
 
-### Required Fields
+### Dataset Fields
 
 - **text**: The incident description (string)
-- **label**: The incident type (string, must match predefined classes)
+- **label**: The incident type (string, matches predefined classes)
 
 ### Supported Classes
 
@@ -112,37 +112,28 @@ The system supports 11 incident types:
 - **Balance**: Aim for balanced class distribution
 - **Quality**: Ensure accurate labels
 
-### Example Data Preparation
+### Dataset Information
 
-```python
-import json
+The `baker-street/maib-incident-reports-5K` dataset includes:
 
-# Convert your data to JSONL format
-incidents = [
-    {"text": "Crew member fell overboard during rough weather", "label": "Accident to person(s)"},
-    {"text": "Vessel collided with another ship in fog", "label": "Collision"},
-    {"text": "Engine room fire caused by fuel leak", "label": "Fire / Explosion"},
-]
-
-# Save as JSONL
-with open("data/maib-data.jsonl", "w") as f:
-    for incident in incidents:
-        f.write(json.dumps(incident) + "\n")
-```
+- **Size**: ~5,000 incident reports
+- **Source**: Marine Accident Investigation Branch (MAIB)
+- **Format**: Automatically processed by the system
+- **Caching**: Downloaded once and cached locally by Hugging Face
+- **Updates**: Automatically gets latest version when available
 
 ## Training
 
 ### Basic Training
 
 ```bash
-python scripts/train.py --data_path data/maib-data.jsonl
+python scripts/train.py
 ```
 
 ### Advanced Training Options
 
 ```bash
 python scripts/train.py \
-  --data_path data/maib-data.jsonl \
   --output_dir my_outputs \
   --epochs 5 \
   --batch_size 16 \
@@ -155,7 +146,6 @@ python scripts/train.py \
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `--data_path` | Required | Path to JSONL data file |
 | `--output_dir` | `outputs` | Output directory |
 | `--epochs` | `3` | Number of training epochs |
 | `--batch_size` | `32` | Training batch size |
@@ -253,8 +243,7 @@ Predictions are returned as:
 
 ```bash
 python scripts/evaluate.py \
-  --model_path outputs/best_model \
-  --data_path data/test_data.jsonl
+  --model_path outputs/best_model
 ```
 
 ### Comprehensive Evaluation
@@ -262,7 +251,6 @@ python scripts/evaluate.py \
 ```bash
 python scripts/evaluate.py \
   --model_path outputs/best_model \
-  --data_path data/test_data.jsonl \
   --output_dir evaluation_results
 ```
 
@@ -358,9 +346,9 @@ config.save_yaml("custom_config.yaml")
 **Error**: `FileNotFoundError: Data file not found`
 
 **Solutions**:
-- Check file path: `--data_path data/maib-data.jsonl`
-- Verify file format (JSONL)
-- Check file permissions
+- Check internet connection for Hugging Face dataset download
+- Verify Hugging Face authentication if required
+- Check available disk space for dataset caching
 
 #### 3. Model Loading Errors
 
@@ -387,7 +375,7 @@ config.save_yaml("custom_config.yaml")
 Enable verbose logging:
 
 ```bash
-python scripts/train.py --data_path data/maib-data.jsonl --verbose
+python scripts/train.py --verbose
 ```
 
 ### Log Analysis

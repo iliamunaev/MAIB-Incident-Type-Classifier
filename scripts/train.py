@@ -29,12 +29,6 @@ def parse_args():
     formatter_class=argparse.ArgumentDefaultsHelpFormatter
   )
 
-  parser.add_argument(
-    "--data_path",
-    type=str,
-    required=True,
-    help="Path to JSONL data file"
-  )
 
   parser.add_argument(
     "--config",
@@ -130,7 +124,7 @@ def setup_config(args) -> Config:
   return config
 
 
-def train_model(config: Config, data_path: str) -> dict:
+def train_model(config: Config) -> dict:
   """Train the model."""
   logger = setup_logger(
     level="DEBUG" if config.logging.level == "DEBUG" else "INFO",
@@ -138,7 +132,6 @@ def train_model(config: Config, data_path: str) -> dict:
   )
 
   logger.info("Starting MAIB Incident Type Classifier training")
-  logger.info(f"Data path: {data_path}")
   logger.info(f"Output directory: {config.training.output_dir}")
   logger.info(f"Model: {config.model.name}")
 
@@ -153,7 +146,7 @@ def train_model(config: Config, data_path: str) -> dict:
 
   # Process data
   logger.info("Processing data...")
-  dataset, metadata = data_processor.process_data(data_path)
+  dataset, metadata = data_processor.process_data()
 
   # Initialize model trainer
   model_trainer = ModelTrainer(config)
@@ -166,7 +159,7 @@ def train_model(config: Config, data_path: str) -> dict:
   return results
 
 
-def evaluate_model(config: Config, model_path: str, data_path: str) -> dict:
+def evaluate_model(config: Config, model_path: str) -> dict:
   """Evaluate existing model."""
   logger = setup_logger(
     level="DEBUG" if config.logging.level == "DEBUG" else "INFO",
@@ -175,14 +168,13 @@ def evaluate_model(config: Config, model_path: str, data_path: str) -> dict:
 
   logger.info("Starting model evaluation")
   logger.info(f"Model path: {model_path}")
-  logger.info(f"Data path: {data_path}")
 
   # Set random seed
   set_seed(config.data.random_seed)
 
   # Process data
   data_processor = DataProcessor(config)
-  dataset, metadata = data_processor.process_data(data_path)
+  dataset, metadata = data_processor.process_data()
 
   # Initialize trainer and load model
   model_trainer = ModelTrainer(config)
@@ -227,7 +219,7 @@ def main():
         raise ValueError("--model_path is required for --eval_only")
 
       # Evaluation only
-      results = evaluate_model(config, args.model_path, args.data_path)
+      results = evaluate_model(config, args.model_path)
       logger.info("Evaluation results:")
       for metric, value in results.items():
         if metric.startswith("eval_"):
@@ -236,7 +228,7 @@ def main():
 
     else:
       # Full training pipeline
-      results = train_model(config, args.data_path)
+      results = train_model(config)
 
       # Print final results
       logger.info("Final training results:")

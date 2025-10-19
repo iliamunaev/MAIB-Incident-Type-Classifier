@@ -43,7 +43,7 @@ config.setup_inference_config()
 
 #### `maib_classifier.data.processor.DataProcessor`
 
-Handles data loading, preprocessing, and tokenization.
+Handles data loading, preprocessing, and tokenization. Automatically loads data from the `baker-street/maib-incident-reports-5K` dataset on Hugging Face.
 
 ```python
 from maib_classifier.data.processor import DataProcessor
@@ -51,10 +51,10 @@ from maib_classifier.data.processor import DataProcessor
 processor = DataProcessor(config)
 
 # Complete data processing pipeline
-dataset, metadata = processor.process_data("data/maib-data.jsonl")
+dataset, metadata = processor.process_data()
 
 # Individual steps
-dataset = processor.load_dataset("data/maib-data.jsonl")
+dataset = processor.load_dataset()
 dataset = processor.prepare_labels(dataset)
 processor.setup_tokenizer()
 dataset = processor.tokenize_dataset(dataset)
@@ -63,12 +63,12 @@ dataset = processor.prepare_for_training(dataset)
 
 **Methods:**
 
-- `load_dataset(data_path)`: Load JSONL dataset and create splits
+- `load_dataset()`: Load Hugging Face dataset and create splits
 - `prepare_labels(dataset)`: Convert labels to ClassLabel format
 - `setup_tokenizer()`: Initialize tokenizer
 - `tokenize_dataset(dataset)`: Tokenize text data
 - `prepare_for_training(dataset)`: Set PyTorch format
-- `process_data(data_path)`: Complete processing pipeline
+- `process_data()`: Complete processing pipeline
 
 ### Model Training
 
@@ -267,7 +267,6 @@ mappings = create_label_mappings(class_names)
 python scripts/train.py [OPTIONS]
 
 Options:
-  --data_path PATH        Path to JSONL data file (required)
   --config PATH           Path to configuration file
   --output_dir PATH       Output directory for model and results
   --model_name STR        Model name to use for training
@@ -303,7 +302,6 @@ python scripts/evaluate.py [OPTIONS]
 
 Options:
   --model_path PATH       Path to trained model (required)
-  --data_path PATH        Path to test data JSONL file (required)
   --config PATH           Path to configuration file
   --output_dir PATH       Output directory for evaluation results
   --verbose               Enable verbose logging
