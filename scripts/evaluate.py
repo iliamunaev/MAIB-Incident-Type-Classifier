@@ -36,12 +36,6 @@ def parse_args():
     help="Path to trained model"
   )
 
-  parser.add_argument(
-    "--data_path",
-    type=str,
-    required=True,
-    help="Path to test data JSONL file"
-  )
 
   parser.add_argument(
     "--config",
@@ -82,7 +76,7 @@ def setup_config(args) -> Config:
   return config
 
 
-def evaluate_model(config: Config, model_path: str, data_path: str, output_dir: str):
+def evaluate_model(config: Config, model_path: str, output_dir: str):
   """Evaluate the model comprehensively."""
   logger = setup_logger(
     level="DEBUG" if config.logging.level == "DEBUG" else "INFO",
@@ -91,7 +85,6 @@ def evaluate_model(config: Config, model_path: str, data_path: str, output_dir: 
 
   logger.info("Starting comprehensive model evaluation")
   logger.info(f"Model path: {model_path}")
-  logger.info(f"Data path: {data_path}")
   logger.info(f"Output directory: {output_dir}")
 
   # Ensure output directory exists
@@ -100,7 +93,7 @@ def evaluate_model(config: Config, model_path: str, data_path: str, output_dir: 
   # Process test data
   logger.info("Processing test data...")
   data_processor = DataProcessor(config)
-  dataset, metadata = data_processor.process_data(data_path)
+  dataset, metadata = data_processor.process_data()
 
   # Get test dataset
   test_dataset = dataset["test"]
@@ -159,7 +152,7 @@ def main():
 
   try:
     # Run evaluation
-    results = evaluate_model(config, args.model_path, args.data_path, args.output_dir)
+    results = evaluate_model(config, args.model_path, args.output_dir)
 
     print(f"\nEvaluation completed successfully!")
     print(f"Results saved to: {args.output_dir}")
