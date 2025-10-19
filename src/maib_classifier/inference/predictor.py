@@ -7,8 +7,8 @@ import torch
 import torch.nn.functional as F
 from typing import List, Dict, Any, Optional, Union, Tuple
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from .utils.config import Config
-from .utils.logger import get_logger
+from maib_classifier.utils.config import Config
+from maib_classifier.utils.logger import get_logger
 
 logger = get_logger(__name__)
 

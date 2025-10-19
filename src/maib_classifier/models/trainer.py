@@ -15,8 +15,8 @@ from transformers import (
   set_seed
 )
 from datasets import DatasetDict
-from .utils.config import Config
-from .utils.logger import get_logger
+from maib_classifier.utils.config import Config
+from maib_classifier.utils.logger import get_logger
 
 logger = get_logger(__name__)
 

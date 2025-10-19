@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, classification_report
 from typing import List, Dict, Any, Optional, Tuple
-from .utils.logger import get_logger
+from maib_classifier.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
